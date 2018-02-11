@@ -34,6 +34,7 @@ namespace Proanthyocyanidin_calculator
                 pathToDb = path;
             }
             createObjectQuery();
+            richTextBox1.Enabled = true;
             foreach (KeyValuePair<string, FoodObject> entry in dictionary)
             {
                 richTextBox1.Text += entry.Value.Name + " " + entry.Value.SumOfMers + "\n";
@@ -74,6 +75,8 @@ namespace Proanthyocyanidin_calculator
             while (reader.Read())
             {
                 string id = reader["NDB No"].ToString();
+                if (id.Equals("97020"))
+                    Console.WriteLine("beng");
                 FoodObject food;
 
                 //jesli juz istnieje w slowniku obiekt wyciagam ze slownika
@@ -85,41 +88,52 @@ namespace Proanthyocyanidin_calculator
                 else
                 {
                     food = new FoodObject(id);
+                    prevId = id;
                 }
                 food.SumOfMers += Double.Parse(reader["Flav_Val"].ToString());
                 if (!dictionary.ContainsKey(id))
                 {
                     OleDbDataReader reader2 = null;
-                    var cmd2 = new OleDbCommand("SELECT * FROM FOOD_DES WHERE FOOD_DES.[NDB No]='" + id + "'", con);
+                    var cmd2 = new OleDbCommand("SELECT * FROM FOOD_DES WHERE FOOD_DES.[NDB No] like '" + id + "'", con);
                     reader2 = cmd2.ExecuteReader();
                     while (reader2.Read())
                     {
                         food.Name = reader2["Long_Desc"].ToString();
-                        food.FoodGroupId = reader2["Long_Desc"].ToString();
+                        if (id.Equals("97020"))
+                            food.Name = "Babyfood, fruit, apple, strawberry, banana";
                         dictionary.Add(id, food);
                     }
                 }
-                prevId = id;
             }
             con.Close();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if(textBox1.Text == null || textBox1.Text.Equals(""))
+            if (con == null)
             {
-                MessageBox.Show("Name of product cannot be blank!", "Error");
+                MessageBox.Show("Please go to settings and select accdb file", "Error");
             }
             else
             {
-                string name = textBox1.Text;
-                var r = from x in dictionary
-                        where x.Value.Name.ToLower().Contains(name.ToLower())
-                        select x;
-                richTextBox1.Clear();
-                foreach(KeyValuePair<string, FoodObject> obj in r)
+                if (textBox1.Text == null || textBox1.Text.Equals(""))
                 {
-                    richTextBox1.Text += obj.Value.ToString() + "\n";
+                    MessageBox.Show("Name of product cannot be blank!", "Error");
+                }
+                else
+                {
+                    string name = textBox1.Text;
+                    var r = from x in dictionary
+                            where x.Value.Name.ToLower().Contains(name.ToLower())
+                            select x;
+                    richTextBox1.Clear();
+                    int counter = 1;
+                    foreach (KeyValuePair<string, FoodObject> obj in r)
+                    {
+                        richTextBox1.Text += counter + ". " + obj.Value.Name + " " + obj.Value.SumOfMers.ToString() + "\n";
+                        Console.WriteLine(counter + ". " + obj.Value.Name + " " + obj.Value.SumOfMers.ToString() + "\n");
+                        counter++;
+                    }
                 }
             }
         }
@@ -133,11 +147,6 @@ namespace Proanthyocyanidin_calculator
         public FoodObject(string id)
         {
             this.id = id;
-        }
-        public String ToString()
-        {
-            String ret = this.name + " " + this.SumOfMers.ToString();
-            return ret;
         }
         public string Name { get => name; set => name = value; }
         public string FoodGroupId { get => foodGroupId; set => foodGroupId = value; }
