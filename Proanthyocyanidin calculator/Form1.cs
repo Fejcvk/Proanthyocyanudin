@@ -35,9 +35,10 @@ namespace Proanthyocyanidin_calculator
             }
             createObjectQuery();
             richTextBox1.Enabled = true;
+            int counter = 1;
             foreach (KeyValuePair<string, FoodObject> entry in dictionary)
             {
-                richTextBox1.Text += entry.Value.Name + " " + entry.Value.SumOfMers + "\n";
+                richTextBox1.Text += counter+ ". "+ entry.Value.Name + " " + entry.Value.SumOfMers + "\n";
             }
             Console.WriteLine(path);
         }
@@ -49,6 +50,7 @@ namespace Proanthyocyanidin_calculator
                 con = perfomConnection(path);
                 con.Open();
                 MessageBox.Show("Connected to db");
+                label2.Text = "Succesfuly connected to database";
                 con.Close();
             }
             catch (Exception ex)
@@ -75,8 +77,6 @@ namespace Proanthyocyanidin_calculator
             while (reader.Read())
             {
                 string id = reader["NDB No"].ToString();
-                if (id.Equals("97020"))
-                    Console.WriteLine("beng");
                 FoodObject food;
 
                 //jesli juz istnieje w slowniku obiekt wyciagam ze slownika
@@ -131,7 +131,6 @@ namespace Proanthyocyanidin_calculator
                     foreach (KeyValuePair<string, FoodObject> obj in r)
                     {
                         richTextBox1.Text += counter + ". " + obj.Value.Name + " " + obj.Value.SumOfMers.ToString() + "\n";
-                        Console.WriteLine(counter + ". " + obj.Value.Name + " " + obj.Value.SumOfMers.ToString() + "\n");
                         counter++;
                     }
                 }
