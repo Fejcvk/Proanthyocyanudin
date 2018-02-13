@@ -19,6 +19,8 @@ namespace Proanthyocyanidin_calculator
         public Form1()
         {
             InitializeComponent();
+            listBox1.DisplayMember = "display";
+            listBox2.DisplayMember = "display";
         }
 
         private void loadDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -34,11 +36,13 @@ namespace Proanthyocyanidin_calculator
                 pathToDb = path;
             }
             createObjectQuery();
-            richTextBox1.Enabled = true;
             int counter = 1;
+            listBox1.Items.Clear();
             foreach (KeyValuePair<string, FoodObject> entry in dictionary)
             {
-                richTextBox1.Text += counter+ ". "+ entry.Value.Name + " " + entry.Value.SumOfMers + "\n";
+                entry.Value.display = entry.Value.display = counter + ". " + entry.Value.Name + " " + entry.Value.SumOfMers;
+                listBox1.Items.Add(entry.Value);
+                counter++;
             }
             Console.WriteLine(path);
         }
@@ -126,15 +130,111 @@ namespace Proanthyocyanidin_calculator
                     var r = from x in dictionary
                             where x.Value.Name.ToLower().Contains(name.ToLower())
                             select x;
-                    richTextBox1.Clear();
                     int counter = 1;
-                    foreach (KeyValuePair<string, FoodObject> obj in r)
+                    listBox1.Items.Clear();
+                    foreach (KeyValuePair<string, FoodObject> entry in r)
                     {
-                        richTextBox1.Text += counter + ". " + obj.Value.Name + " " + obj.Value.SumOfMers.ToString() + "\n";
+                        entry.Value.display = counter + ". " + entry.Value.Name + " " + entry.Value.SumOfMers;
+                        listBox1.Items.Add(entry.Value);
                         counter++;
                     }
                 }
             }
+        }
+
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                button1.PerformClick();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if(listBox1.SelectedItems.Count > 0)
+            {
+                foreach(var item in listBox1.SelectedItems)
+                {
+                    if(!listBox2.Items.Contains(item))
+                        listBox2.Items.Add(item);
+                }
+                listBox1.SelectedItems.Clear();
+            }
+            calculateSum();
+        }
+
+        private void listBox1_DoubleClick(object sender, EventArgs e)
+        {
+            if (listBox1.SelectedItem != null && !listBox2.Items.Contains(listBox1.SelectedItem) && listBox1.SelectedItems.Count < 2)
+            {
+                listBox2.Items.Add(listBox1.SelectedItem);
+                listBox1.SelectedItems.Clear();
+            }
+            else if(listBox1.SelectedItems.Count > 0)
+            {
+                foreach(var item in listBox1.SelectedItems)
+                {
+                    if (!listBox2.Items.Contains(item))
+                        listBox2.Items.Add(item);
+                }
+                listBox1.SelectedItems.Clear();
+            }
+            calculateSum();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            listBox2.Items.Clear();
+            calculateSum();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (listBox2.SelectedItems.Count < 1)
+                MessageBox.Show("You cannot delete 0 items", "Error");
+            else
+            {
+                var selected = listBox2.SelectedItems;
+
+                for(int i = listBox2.SelectedItems.Count - 1; i >= 0; i--)
+                {
+
+                    listBox2.Items.Remove(selected[i]);
+                }
+            }
+            calculateSum();
+        }
+
+        private void calculateSum()
+        {
+            double sum = 0;
+            foreach(var item in listBox2.Items)
+            {
+                var foodObject = item as FoodObject ;
+                sum += foodObject.SumOfMers;
+            }
+            textBox2.Text = sum.ToString();
+        }
+
+        private void listBox2_DoubleClick(object sender, EventArgs e)
+        {
+            if(listBox2.SelectedItems.Count < 2)
+                listBox2.Items.Remove(listBox2.SelectedItem);
+            else
+            {
+                MessageBox.Show("Cannot perform removing via double click on multiple elements, please use provided Button", "Operation error");
+                listBox2.SelectedItems.Clear();
+            }
+            calculateSum();
+        }
+
+        private void listBox1_Click(object sender, EventArgs e)
+        {
+            listBox2.SelectedItems.Clear();
+        }
+
+        private void listBox2_Click(object sender, EventArgs e)
+        {
+            listBox1.SelectedItems.Clear();
         }
     }
     public class FoodObject
@@ -143,9 +243,14 @@ namespace Proanthyocyanidin_calculator
         private string name;
         private string foodGroupId;
         private double sumOfMers;
+        public string display;
         public FoodObject(string id)
         {
             this.id = id;
+        }
+        public override string ToString()
+        {
+            return display; 
         }
         public string Name { get => name; set => name = value; }
         public string FoodGroupId { get => foodGroupId; set => foodGroupId = value; }
