@@ -40,7 +40,7 @@ namespace Proanthyocyanidin_calculator
             listBox1.Items.Clear();
             foreach (KeyValuePair<string, FoodObject> entry in dictionary)
             {
-                entry.Value.display = entry.Value.display = counter + ". " + entry.Value.Name + " " + entry.Value.SumOfMers;
+                entry.Value.counter = counter;
                 listBox1.Items.Add(entry.Value);
                 counter++;
             }
@@ -134,7 +134,7 @@ namespace Proanthyocyanidin_calculator
                     listBox1.Items.Clear();
                     foreach (KeyValuePair<string, FoodObject> entry in r)
                     {
-                        entry.Value.display = counter + ". " + entry.Value.Name + " " + entry.Value.SumOfMers;
+                        entry.Value.counter = counter;
                         listBox1.Items.Add(entry.Value);
                         counter++;
                     }
@@ -148,39 +148,27 @@ namespace Proanthyocyanidin_calculator
                 button1.PerformClick();
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            if(listBox1.SelectedItems.Count > 0)
-            {
-                foreach(var item in listBox1.SelectedItems)
-                {
-                    if(!listBox2.Items.Contains(item))
-                        listBox2.Items.Add(item);
-                }
-                listBox1.SelectedItems.Clear();
-            }
-            calculateSum();
-        }
 
         private void listBox1_DoubleClick(object sender, EventArgs e)
         {
             if (listBox1.SelectedItem != null && !listBox2.Items.Contains(listBox1.SelectedItem) && listBox1.SelectedItems.Count < 2)
             {
-                listBox2.Items.Add(listBox1.SelectedItem);
-                listBox1.SelectedItems.Clear();
-            }
-            else if(listBox1.SelectedItems.Count > 0)
-            {
-                foreach(var item in listBox1.SelectedItems)
+                var temp = listBox1.SelectedItem as FoodObject;
+                using (var form2 = new Form2(this, temp))
                 {
-                    if (!listBox2.Items.Contains(item))
-                        listBox2.Items.Add(item);
+                    form2.ShowDialog();
+
+                    listBox2.Items.Add(temp2);
+                    listBox1.SelectedItems.Clear();
                 }
-                listBox1.SelectedItems.Clear();
             }
             calculateSum();
         }
-
+        FoodObject temp2;
+        public void setObj(FoodObject food)
+        {
+            temp2 = food;
+        }
         private void button3_Click(object sender, EventArgs e)
         {
             listBox2.Items.Clear();
@@ -241,19 +229,21 @@ namespace Proanthyocyanidin_calculator
     {
         private string id;
         private string name;
+        public int counter;
         private string foodGroupId;
         private double sumOfMers;
-        public string display;
+        private double weight = 100;
         public FoodObject(string id)
         {
             this.id = id;
         }
         public override string ToString()
         {
-            return display; 
+            return counter + ". " + name + " " + sumOfMers + " / " + weight+"g"; 
         }
         public string Name { get => name; set => name = value; }
         public string FoodGroupId { get => foodGroupId; set => foodGroupId = value; }
         public double SumOfMers { get => sumOfMers; set => sumOfMers = value; }
+        public double Weight { get => weight; set => weight = value; }
     }
 }
