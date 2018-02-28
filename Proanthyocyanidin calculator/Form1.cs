@@ -165,9 +165,15 @@ namespace Proanthyocyanidin_calculator
                 using (var form2 = new Form2(this, temp))
                 {
                     form2.ShowDialog();
-
-                    listBox2.Items.Add(temp2);
-                    listBox1.SelectedItems.Clear();
+                    if (temp2 != null)
+                    {
+                        listBox2.Items.Add(temp2);
+                        listBox1.SelectedItems.Clear();
+                    }
+                    else
+                    {
+                        Console.WriteLine("not added because item was not set");
+                    }
                 }
             }
             calculateSum();

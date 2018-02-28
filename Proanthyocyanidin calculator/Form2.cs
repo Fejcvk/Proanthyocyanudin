@@ -43,5 +43,15 @@ namespace Proanthyocyanidin_calculator
             if (e.KeyCode == Keys.Enter)
                 button1.PerformClick();
         }
+
+        private void Form2_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Console.WriteLine("toDispose");
+        }
+
+        private void Form2_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Console.WriteLine("closing");
+        }
     }
 }
