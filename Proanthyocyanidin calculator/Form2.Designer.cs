@@ -37,25 +37,28 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(80, 9);
+            this.label1.Location = new System.Drawing.Point(120, 14);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(58, 13);
+            this.label1.Size = new System.Drawing.Size(84, 20);
             this.label1.TabIndex = 0;
             this.label1.Text = "Selected : ";
             // 
             // weightTb
             // 
-            this.weightTb.Location = new System.Drawing.Point(235, 53);
+            this.weightTb.Location = new System.Drawing.Point(352, 82);
+            this.weightTb.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.weightTb.Name = "weightTb";
-            this.weightTb.Size = new System.Drawing.Size(100, 20);
+            this.weightTb.Size = new System.Drawing.Size(148, 26);
             this.weightTb.TabIndex = 1;
             this.weightTb.KeyDown += new System.Windows.Forms.KeyEventHandler(this.weightTb_KeyDown);
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(83, 104);
+            this.button1.Location = new System.Drawing.Point(124, 160);
+            this.button1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(213, 23);
+            this.button1.Size = new System.Drawing.Size(320, 35);
             this.button1.TabIndex = 2;
             this.button1.Text = "Add";
             this.button1.UseVisualStyleBackColor = true;
@@ -64,24 +67,27 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 56);
+            this.label2.Location = new System.Drawing.Point(18, 86);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(207, 13);
+            this.label2.Size = new System.Drawing.Size(310, 20);
             this.label2.TabIndex = 3;
             this.label2.Text = "Enter weight of selected products in grams";
             // 
             // Form2
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(386, 139);
+            this.ClientSize = new System.Drawing.Size(579, 214);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.weightTb);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Form2";
-            this.Text = "Form2";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "Input weight of selected product";
             this.ResumeLayout(false);
             this.PerformLayout();
 

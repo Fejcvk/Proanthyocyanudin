@@ -24,7 +24,7 @@ namespace Proanthyocyanidin_calculator
 
         private void button1_Click(object sender, EventArgs e)
         {
-            food.SumOfMers = food.SumOfMers / 100.0 * getValue();
+            food.SumOfMersWithInputWeight = (food.SumOfMers / 100.0 ) * getValue();
             food.Weight = getValue();
             form.setObj(food);
             this.Dispose();

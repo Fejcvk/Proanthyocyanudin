@@ -16,6 +16,7 @@ namespace Proanthyocyanidin_calculator
         String pathToDb = null;
         OleDbConnection con;
         Dictionary<string, FoodObject> dictionary = new Dictionary<string, FoodObject>();
+       
         public Form1()
         {
             InitializeComponent();
@@ -95,6 +96,7 @@ namespace Proanthyocyanidin_calculator
                     prevId = id;
                 }
                 food.SumOfMers += Double.Parse(reader["Flav_Val"].ToString());
+                food.SumOfMersWithInputWeight = food.SumOfMers;
                 if (!dictionary.ContainsKey(id))
                 {
                     OleDbDataReader reader2 = null;
@@ -120,9 +122,16 @@ namespace Proanthyocyanidin_calculator
             }
             else
             {
+                int counter = 1;
                 if (textBox1.Text == null || textBox1.Text.Equals(""))
                 {
-                    MessageBox.Show("Name of product cannot be blank!", "Error");
+                    listBox1.Items.Clear();
+                    foreach (KeyValuePair<string, FoodObject> entry in dictionary)
+                    {
+                        entry.Value.counter = counter;
+                        listBox1.Items.Add(entry.Value);
+                        counter++;
+                    }
                 }
                 else
                 {
@@ -130,7 +139,6 @@ namespace Proanthyocyanidin_calculator
                     var r = from x in dictionary
                             where x.Value.Name.ToLower().Contains(name.ToLower())
                             select x;
-                    int counter = 1;
                     listBox1.Items.Clear();
                     foreach (KeyValuePair<string, FoodObject> entry in r)
                     {
@@ -171,6 +179,7 @@ namespace Proanthyocyanidin_calculator
         }
         private void button3_Click(object sender, EventArgs e)
         {
+
             listBox2.Items.Clear();
             calculateSum();
         }
@@ -181,12 +190,12 @@ namespace Proanthyocyanidin_calculator
                 MessageBox.Show("You cannot delete 0 items", "Error");
             else
             {
-                var selected = listBox2.SelectedItems;
+                var selectedItems = listBox2.SelectedItems;
 
                 for(int i = listBox2.SelectedItems.Count - 1; i >= 0; i--)
                 {
-
-                    listBox2.Items.Remove(selected[i]);
+                    var foodObj = selectedItems[i] as FoodObject;
+                    listBox2.Items.Remove(selectedItems[i]);
                 }
             }
             calculateSum();
@@ -198,7 +207,7 @@ namespace Proanthyocyanidin_calculator
             foreach(var item in listBox2.Items)
             {
                 var foodObject = item as FoodObject ;
-                sum += foodObject.SumOfMers;
+                sum += foodObject.SumOfMersWithInputWeight;
             }
             textBox2.Text = sum.ToString();
         }
@@ -232,6 +241,7 @@ namespace Proanthyocyanidin_calculator
         public int counter;
         private string foodGroupId;
         private double sumOfMers;
+        private double sumOfMersWithDifferentWeight;
         private double weight = 100;
         public FoodObject(string id)
         {
@@ -239,11 +249,13 @@ namespace Proanthyocyanidin_calculator
         }
         public override string ToString()
         {
-            return counter + ". " + name + " " + sumOfMers + " / " + weight+"g"; 
+            return counter + ". " + name + " " + sumOfMersWithDifferentWeight + " / " + weight+"g"; 
         }
+
         public string Name { get => name; set => name = value; }
         public string FoodGroupId { get => foodGroupId; set => foodGroupId = value; }
         public double SumOfMers { get => sumOfMers; set => sumOfMers = value; }
         public double Weight { get => weight; set => weight = value; }
+        public double SumOfMersWithInputWeight { get => sumOfMersWithDifferentWeight; set => sumOfMersWithDifferentWeight = value; }
     }
 }
